@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{3C2AC0C5-43F0-D6A3-A64F-E9A394DA09DD}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "WZTAndroidStart",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
