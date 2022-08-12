@@ -54,8 +54,7 @@ void AWZTAndroidStartCharacter::SetupPlayerInputComponent(class UInputComponent*
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AWZTAndroidStartCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AWZTAndroidStartCharacter::MoveRight);
@@ -67,10 +66,6 @@ void AWZTAndroidStartCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAxis("TurnRate", this, &AWZTAndroidStartCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AWZTAndroidStartCharacter::LookUpAtRate);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AWZTAndroidStartCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AWZTAndroidStartCharacter::TouchStopped);
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AWZTAndroidStartCharacter::OnResetVR);
@@ -88,15 +83,7 @@ void AWZTAndroidStartCharacter::OnResetVR()
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void AWZTAndroidStartCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
 
-void AWZTAndroidStartCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
-}
 
 void AWZTAndroidStartCharacter::TurnAtRate(float Rate)
 {
