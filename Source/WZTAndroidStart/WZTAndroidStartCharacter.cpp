@@ -90,7 +90,7 @@ void AWZTAndroidStartCharacter::TurnAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	float DeltaRate =(Rate - RateBaseT);
 	if (DeltaRate < 0.1 && DeltaRate>-0.1) {
-		AddControllerYawInput(500*DeltaRate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		AddControllerYawInput(80*DeltaRate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 	}
 		RateBaseT = Rate;
 }
@@ -100,7 +100,7 @@ void AWZTAndroidStartCharacter::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	float DeltaRate = (Rate - RateBaseL);
 	if (DeltaRate < 0.1 && DeltaRate>-0.1) {
-		AddControllerPitchInput(500*DeltaRate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+		AddControllerPitchInput(80*DeltaRate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 	}
 	RateBaseL = Rate;
 }
