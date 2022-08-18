@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include<cmath>
 
 //////////////////////////////////////////////////////////////////////////
 // AWZTAndroidStartCharacter
@@ -63,47 +64,12 @@ void AWZTAndroidStartCharacter::SetupPlayerInputComponent(class UInputComponent*
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AWZTAndroidStartCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AWZTAndroidStartCharacter::LookUpAtRate);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AWZTAndroidStartCharacter::OnResetVR);
 }
 
 
-void AWZTAndroidStartCharacter::OnResetVR()
-{
-	// If WZTAndroidStart is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in WZTAndroidStart.Build.cs is not automatically propagated
-	// and a linker error will result.
-	// You will need to either:
-	//		Add "HeadMountedDisplay" to [YourProject].Build.cs PublicDependencyModuleNames in order to build successfully (appropriate if supporting VR).
-	// or:
-	//		Comment or delete the call to ResetOrientationAndPosition below (appropriate if not supporting VR)
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
 
 
-float RateBaseT=0;
-void AWZTAndroidStartCharacter::TurnAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	float DeltaRate =(Rate - RateBaseT);
-	if (DeltaRate < 0.1 && DeltaRate>-0.1) {
-		AddControllerYawInput(80*DeltaRate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
-	}
-		RateBaseT = Rate;
-}
-float RateBaseL = 0;
-void AWZTAndroidStartCharacter::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	float DeltaRate = (Rate - RateBaseL);
-	if (DeltaRate < 0.1 && DeltaRate>-0.1) {
-		AddControllerPitchInput(80*DeltaRate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-	}
-	RateBaseL = Rate;
-}
 
 void AWZTAndroidStartCharacter::MoveForward(float Value)
 {
@@ -132,4 +98,36 @@ void AWZTAndroidStartCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void AWZTAndroidStartCharacter::TurnAndLookUp(float X, float Y)
+{
+	int16 Kx=0, Ky=0;
+	if(abs(SecondX-X)>5)
+	{
+		if (SecondX < X)
+		{
+			Kx = 1;
+		}
+		else
+		{
+			Kx = -1;
+		}
+		SecondX = X;
+	}
+	if (abs(SecondY - Y) > 5)
+	{
+		if (SecondY < Y)
+		{
+			Ky = -1;
+		}
+		else
+		{
+			Ky = 1;
+		}
+		SecondY = Y;
+	}
+	AddControllerYawInput(Kx * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	AddControllerPitchInput(Ky * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+	
 }
